@@ -568,7 +568,7 @@ class Mixup(nn.Module):
             return X, Y
         else:
             weight = coeffs.view(-1) * weight + (1 - coeffs.view(-1)) * weight[perm]
-            return X, Y
+            return X, Y, weight
 
 
 class Net(nn.Module):
