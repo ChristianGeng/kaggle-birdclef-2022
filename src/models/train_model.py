@@ -291,7 +291,13 @@ def get_config():
 
     cfg.lr = 0.0001
     cfg.epochs = 5
-    cfg.batch_size = 64
+
+    # original:
+    # need to reduce:
+    # see https://stackoverflow.com/questions/59129812/how-to-avoid-cuda-out-of-memory-in-pytorch
+    #cfg.batch_size = 64
+    cfg.batch_size = 16
+    # probably never used:
     cfg.batch_size_val = 64
     cfg.backbone = "resnet34"
 
