@@ -322,6 +322,7 @@ def get_config():
 
     return cfg
 
+cfg = get_config()
 
 def batch_to_device(batch, device):
     batch_dict = {key: batch[key].to(device) for key in batch}
@@ -458,7 +459,6 @@ class CustomDataset(Dataset):
         except:
             print("FAIL READING rec", fp)
 
-        print(self.data_folder)
         return wav
 
     def birds2target(self, birds):
@@ -653,6 +653,7 @@ class Net(nn.Module):
             x = x.reshape(b // self.factor, self.factor * t, c, f)
 
             if self.cfg.mixup:
+                # breakpoint()
                 x, y, weight = self.mixup(x, y, weight)
             if self.cfg.mixup2:
                 x, y, weight = self.mixup(x, y, weight)
@@ -706,7 +707,7 @@ def get_state_dict(sd_fp):
 
 
 def SCORED_BIRDS():
-    fname = os.path.join(get_project_root(), "data", "raw", "scored_birds.json")
+    fname = os.path.join(get_project_root(), "data", "interim", "scored_birds.json")
     with open(fname) as fp:
         SCORED_BIRDS = json.load(fp)
     return SCORED_BIRDS
@@ -744,8 +745,6 @@ TEST_AUDIO_PATH = os.path.join(get_project_root(), "data", "raw", "test_soundsca
 
 
 def val_dinger():
-    cfg = get_config()
-
 
     # print(cfg.model, cfg.dataset, cfg.backbone, cfg.pretrained_weights, cfg.mel_norm)
 
@@ -774,7 +773,6 @@ def val_dinger():
 
 def train():
 
-    cfg = get_config()
     set_seed(cfg.seed)
 
 
