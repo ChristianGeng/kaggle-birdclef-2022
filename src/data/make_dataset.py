@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import shutil
+import pandas as pd
+import audiofile as af
+import audata
+
 import click
 import logging
 from pathlib import Path
@@ -37,20 +41,32 @@ def unpack_data():
     shutil.unpack_archive(fname, extract_dir=extract_dir)
 
 
-
 @click.command()
-# @click.argument("input_filepath", type=click.Path(exists=True))
-# @click.argument("output_filepath", type=click.Path())
-def df_with_durations():
-    """Runs data processing scripts to turn raw data from (../raw) into
-    cleaned data ready to be analyzed (saved in ../processed).
-    """
+def create_durations():
+    """Runs data processing scripts to add"""
 
-    dir_name = "birdclef-2022-df-train-with-durations"
-    ofname = "df-with-durations.csv"
+    # dir_name = "birdclef-2022-df-train-with-durations"
+    ifname = os.path.join(get_project_root(), "data", "interim", "train_metadata.csv")
+    df1 = pd.read_csv(ifname)
 
+    audio_dur_params = [
+        (os.path.join(PROJECT_ROOT, "data", "interim", "train_audio", f),)
+        for f in df1["filename"]
+    ]
+
+    durations = audata.utils.run_worker_threads(
+        num_workers=10,
+        task_fun=af.duration,
+        params=audio_dur_params,
+        task_description="{:16}".format("calc durations"),
+        progress_bar=True,
+    )
+
+    df = pd.concat([df1["filename"], pd.Series(durations, name='duration')], axis=1)
+    ofname = os.path.join(PROJECT_ROOT, 'data', 'interim', "df-with-durations.csv")
+    df.to_csv(ofname)
     logger = logging.getLogger(__name__)
-    logger.info("making final data set from raw data")
+    logger.info("writing duration dataset")
 
 
 if __name__ == "__main__":

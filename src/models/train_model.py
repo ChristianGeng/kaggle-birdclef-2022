@@ -1,5 +1,7 @@
 import argparse
 import ast
+from pathlib import Path
+
 import gc
 import glob
 import importlib
@@ -12,6 +14,8 @@ import sys
 from collections import defaultdict
 from copy import copy
 from types import SimpleNamespace
+
+from click import utils
 
 import cv2
 import librosa
@@ -33,7 +37,9 @@ from torch.utils.data import Dataset
 from torch.utils.data import SequentialSampler
 from tqdm import tqdm
 from transformers import get_cosine_schedule_with_warmup
+from utils.utils import get_project_root
 
+PROJECT_ROOT = get_project_root()
 
 def set_seed(seed=1234):
     random.seed(seed)
@@ -53,7 +59,7 @@ def get_config():
     cfg.data_folder = ""
     cfg.name = "julian"
     # cfg.data_dir = "../input/birdclef-2022/"
-    cfg.data_dir = os.path.join(get_project_root(), 'data', 'raw')
+    cfg.data_dir = os.path.join(get_project_root(), 'data', 'interim')
 
     # cfg.train_data_folder = cfg.data_dir + "train_audio/"
     cfg.train_data_folder = os.path.join(cfg.data_dir, "train_audio/")
@@ -296,11 +302,12 @@ def get_config():
     cfg.mix_beta = 1
 
     # cfg.train_df1 = "../input/birdclef-2022/train_metadata.csv"
-    cfg.train_df1 = os.path.join(get_project_root(), 'data', 'raw',"train_metadata.csv")
+    cfg.train_df1 = os.path.join(get_project_root(), 'data', 'interim',"train_metadata.csv")
 
 
-    cfg.train_df2 = "../input/birdclef-2022-df-train-with-durations/df-with-durations.csv"
     # cfg.train_df2 = "../input/birdclef-2022-df-train-with-durations/df-with-durations.csv"
+    # cfg.train_df2 = "../input/birdclef-2022-df-train-with-durations/df-with-durations.csv"
+    cfg.train_df2 = os.path.join(PROJECT_ROOT, 'data', 'interim', "df-with-durations.csv")
 
 
     cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -696,14 +703,6 @@ def get_state_dict(sd_fp):
     sd = torch.load(sd_fp, map_location="cpu")["model"]
     sd = {k.replace("module.", ""): v for k, v in sd.items()}
     return sd
-
-
-from pathlib import Path
-
-
-def get_project_root() -> Path:
-    # return Path(__file__).parent.parent
-    return Path(os.path.dirname(os.path.abspath(__file__))).parent.parent
 
 
 def SCORED_BIRDS():
