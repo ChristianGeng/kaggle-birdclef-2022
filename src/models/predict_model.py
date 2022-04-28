@@ -1,12 +1,10 @@
 import os
-
-from models.resnet import get_config
-from models.resnet import batch_to_device, gem
 import torch
-import utils.utils
 
-from models.resnet import Net, CustomDataset
 from models.resnet import get_config
+from utils.utils import get_project_root
+from models.resnet import batch_to_device, gem
+from models.resnet import Net, CustomDataset
 from models.common import SCORED_BIRDS
 
 import pandas as pd
@@ -53,7 +51,7 @@ from torch.utils.data import Dataset
 from torch.utils.data import SequentialSampler
 from tqdm import tqdm
 from transformers import get_cosine_schedule_with_warmup
-from utils.utils import get_project_root
+
 
 SCORED_BIRDS = SCORED_BIRDS()
 
