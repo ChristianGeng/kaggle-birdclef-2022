@@ -1,3 +1,19 @@
+"""
+Location for the model:
+
+Training:
+https://www.kaggle.com/code/julian3833/birdclef-21-2nd-place-model-train-0-66
+
+Submission Notebook:
+https://www.kaggle.com/code/julian3833/birdclef-21-2nd-place-model-submit-0-66
+
+http://ceur-ws.org/Vol-2936/paper-134.pdf
+
+https://github.com/ChristofHenkel/kaggle-birdclef2021-2nd-place
+
+
+"""
+
 import argparse
 import ast
 from pathlib import Path
