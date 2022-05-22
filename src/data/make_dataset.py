@@ -3,6 +3,7 @@ import shutil
 import pandas as pd
 import audiofile as af
 import audata
+import audeer
 
 import click
 import logging
@@ -54,7 +55,7 @@ def create_durations():
         for f in df1["filename"]
     ]
 
-    durations = audata.utils.run_worker_threads(
+    durations = audeer.run_worker_threads(
         num_workers=10,
         task_fun=af.duration,
         params=audio_dur_params,
@@ -79,5 +80,4 @@ if __name__ == "__main__":
     # find .env automagically by walking up directories until it's found, then
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
-
-    main()
+    # main()
